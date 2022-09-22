@@ -21,7 +21,7 @@ var options = {
         height: "28mm",
         contents: {
             first: 'Cover page',
-            2: 'Second page', // Any page number is working. 1-based index
+            2: 'Second page',
             default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
             last: 'Last Page'
         }
@@ -57,32 +57,33 @@ app.post('/', async (req, res) => {
                 result++;
             }
         })
-        pdf
-            .create({
-                html: html,
-                data: {
-                    response: response,
-                    result: result
-                },
-                path: "./output.pdf",
-                type: "",
-            }, options)
-            .then((res) => {
-                console.log(res);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        // pdf
+        //     .create({
+        //         html: html,
+        //         data: {
+        //             response: response,
+        //             result: result
+        //         },
+        //         path: "./output.pdf",
+        //         type: "",
+        //     }, options)
+        //     .then((res) => {
+        //         console.log(res);
+        //     })
+        //     .catch((error) => {
+        //         console.error(error);
+        //     });
+        // console.log('file created successfully')
         const msg = {
             from: "sarthakrajesh777@gmail.com",
             to: details.email,
             subject: "test",
-            attachments: [{
-                filename: 'output.pdf',
-                path: './output.pdf',
-                contentType: 'application/pdf'
-            }],
-            text: ""
+            // attachments: [{
+            //     filename: 'output.pdf',
+            //     path: './output.pdf',
+            //     contentType: 'application/pdf'
+            // }],
+            text: "test"
         }
         nodemailer.createTransport({
             service: 'gmail',
