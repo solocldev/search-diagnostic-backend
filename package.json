@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon server"
+    "start": "npm link phantomjs-prebuilt; nodemon server"
   },
   "keywords": [],
   "author": "",
