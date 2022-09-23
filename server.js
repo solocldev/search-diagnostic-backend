@@ -81,22 +81,20 @@ app.post('/', async (req, res) => {
             <h1 class="title" style="text-align:center; color:#5D3FD3;">Search Diagnostics</h1>
             <h1 class="score" style="text-align:center;">{{result}}0%</h1>
             <ul style="list-style:none;">
-                ${response.map(res => {
-                return (
-                    `<div class="box" style="box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+            <div class="box" style="box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
                 border-radius: 12px;
                 padding: 1rem;">
-                        <li class="question" style="margin:1rem 0;font-size: 18px;">Question: </li>
-                        <li class="question" style="margin:1rem 0;font-size: 24px;">${res.question} </li>
-                        <li class="answer" style="margin:1rem 0;">Your response: <span
-                            style="font-weight: bold; font-size: 24px; color:#5D3FD3;">${res.answer}</span></li>
-                    </div>`
-                )
-            })}
-            </ul>
-        </body>
-        </html>
-        ` }, options).then(pdfBuffer => {
+                {{#each response}}
+                    <li class="question" style="margin:1rem 0;font-size: 18px;">Question: </li>
+                    <li class="question" style="margin:1rem 0;font-size: 24px;">{{this.question}} </li>
+                    <li class="answer" style="margin:1rem 0;">Your response: <span
+                        style="font-weight: bold; font-size: 24px; color:#5D3FD3;">{{this.answer}}</span></li>
+                {{/each}}
+            </div>
+            </ul >
+        </body >
+        </html >
+                    ` }, options).then(pdfBuffer => {
                 fs.writeFileSync('./output.pdf', pdfBuffer)
                 const msg = {
                     from: "sarthakrajesh777@gmail.com",
