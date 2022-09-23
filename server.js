@@ -5,10 +5,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
-import jsdom from "jsdom";
 import html_to_pdf from 'html-pdf-node'
-
-const { JSDOM } = jsdom;
 
 
 const html = fs.readFileSync('./template.html', 'utf8');
