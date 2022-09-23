@@ -31,7 +31,7 @@ var options = {
 
 const generatePdf = () => {
     html_to_pdf.generatePdf({ content: "<h1>Welcome to html-pdf-node</h1>" }, options).then(pdfBuffer => {
-        fs.writeFileSync('output.pdf', pdfBuffer)
+        fs.writeFileSync('output.pdf', pdfBuffer).then(() => console.log('file created'))
         // console.log("PDF Buffer:-", pdfBuffer.toString('utf-8'));
     });
 }
@@ -66,7 +66,7 @@ app.post('/', async (req, res) => {
                 result++;
             }
         })
-        generatePdf()
+        await generatePdf()
         const msg = {
             from: "sarthakrajesh777@gmail.com",
             to: details.email,
