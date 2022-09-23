@@ -31,10 +31,7 @@ var options = {
 };
 
 const generatePdf = () => {
-    html_to_pdf.generatePdf({ content: "<h1>nice</h1>" }, options).then(pdfBuffer => {
-        fs.writeFileSync('./output.pdf', pdfBuffer)
-        // console.log("PDF Buffer:-", pdfBuffer.toString('utf-8'));
-    });
+
 }
 
 const app = express();
@@ -67,32 +64,35 @@ app.post('/', async (req, res) => {
                 result++;
             }
         })
-        generatePdf()
-        const msg = {
-            from: "sarthakrajesh777@gmail.com",
-            to: details.email,
-            subject: "test",
-            attachments: [{
-                filename: 'output.pdf',
-                path: './output.pdf',
-                contentType: 'application/pdf'
-            }],
-            text: "test"
-        }
-        nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'sarthakrajesh777@gmail.com',
-                pass: process.env.APPPASS
-            },
-            port: 465,
-            host: 'smtp.gmail.com',
-        }).sendMail(msg, (err) => {
-            if (err) {
-                console.log(err);
+        html_to_pdf.generatePdf({ content: "<h1>nice</h1>" }, options).then(pdfBuffer => {
+            fs.writeFileSync('./output.pdf', pdfBuffer)
+            const msg = {
+                from: "sarthakrajesh777@gmail.com",
+                to: details.email,
+                subject: "test",
+                attachments: [{
+                    filename: 'output.pdf',
+                    path: './output.pdf',
+                    contentType: 'application/pdf'
+                }],
+                text: "test"
             }
-            else console.log('sent')
-        })
+            nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'sarthakrajesh777@gmail.com',
+                    pass: process.env.APPPASS
+                },
+                port: 465,
+                host: 'smtp.gmail.com',
+            }).sendMail(msg, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+                else console.log('sent')
+            })
+        });
+
         res.status(201).json(object)
     } catch (error) {
         res.json(error.message);
