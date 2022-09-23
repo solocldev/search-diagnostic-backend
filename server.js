@@ -4,8 +4,12 @@ import { Object } from './model.js';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
-import pdf from 'pdf-creator-node';
 import fs from 'fs';
+import jsdom from "jsdom";
+import html_to_pdf from 'html-pdf-node'
+
+const { JSDOM } = jsdom;
+
 
 const html = fs.readFileSync('./template.html', 'utf8');
 
@@ -27,6 +31,14 @@ var options = {
         }
     }
 };
+
+const generatePdf = () => {
+    html_to_pdf.generatePdf({ content: "<h1>Welcome to html-pdf-node</h1>" }, options).then(pdfBuffer => {
+        fs.writeFileSync('output.pdf', pdfBuffer)
+        // console.log("PDF Buffer:-", pdfBuffer.toString('utf-8'));
+    });
+}
+
 const app = express();
 dotenv.config()
 app.use(cors())
@@ -57,32 +69,16 @@ app.post('/', async (req, res) => {
                 result++;
             }
         })
-        // pdf
-        //     .create({
-        //         html: html,
-        //         data: {
-        //             response: response,
-        //             result: result
-        //         },
-        //         path: "./output.pdf",
-        //         type: "",
-        //     }, options)
-        //     .then((res) => {
-        //         console.log(res);
-        //     })
-        //     .catch((error) => {
-        //         console.error(error);
-        //     });
-        // console.log('file created successfully')
+        generatePdf()
         const msg = {
             from: "sarthakrajesh777@gmail.com",
             to: details.email,
             subject: "test",
-            // attachments: [{
-            //     filename: 'output.pdf',
-            //     path: './output.pdf',
-            //     contentType: 'application/pdf'
-            // }],
+            attachments: [{
+                filename: 'output.pdf',
+                path: './output.pdf',
+                contentType: 'application/pdf'
+            }],
             text: "test"
         }
         nodemailer.createTransport({
