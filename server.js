@@ -79,7 +79,7 @@ app.post('/', async (req, res) => {
         
         <body>
             <h1 class="title" style="text-align:center; color:#5D3FD3;">Search Diagnostics</h1>
-            <h1 class="score" style="text-align:center;">{{result}}0%</h1>
+            <h1 class="score" style="text-align:center;">${result}0%</h1>
             <ul style="list-style:none;">
             <div class="box" style="box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
                 border-radius: 12px;
