@@ -64,7 +64,7 @@ app.post('/', async (req, res) => {
                 result++;
             }
         })
-        html_to_pdf.generatePdf({ content: "<h1>nice</h1>" }, options).then(pdfBuffer => {
+        html_to_pdf.generatePdf({ content: "<h1>nice one</h1>" }, options).then(pdfBuffer => {
             fs.writeFileSync('./output.pdf', pdfBuffer)
             const msg = {
                 from: "sarthakrajesh777@gmail.com",
