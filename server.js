@@ -32,10 +32,7 @@ var options = {
 
 const generatePdf = () => {
     html_to_pdf.generatePdf({ content: "<h1>nice</h1>" }, options).then(pdfBuffer => {
-        console.log(pdfBuffer);
         fs.writeFileSync('output.pdf', pdfBuffer)
-        const file = fs.readFileSync('output.pdf', 'utf8')
-        console.log('pdf created', file)
         // console.log("PDF Buffer:-", pdfBuffer.toString('utf-8'));
     });
 }
