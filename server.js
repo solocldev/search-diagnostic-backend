@@ -31,7 +31,7 @@ var options = {
 };
 
 const generatePdf = () => {
-    html_to_pdf.generatePdf({ content: "<h1>Welcome to html-pdf-node</h1>" }, options).then(pdfBuffer => {
+    html_to_pdf.generatePdf({ content: "<h1>nice</h1>" }, options).then(pdfBuffer => {
         console.log(pdfBuffer);
         fs.writeFileSync('output.pdf', pdfBuffer)
         const file = fs.readFileSync('output.pdf', 'utf8')
