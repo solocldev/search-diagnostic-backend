@@ -6,6 +6,7 @@ import cors from 'cors';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 import html_to_pdf from 'html-pdf-node'
+import path from 'path';
 
 
 const html = fs.readFileSync('./template.html', 'utf8');
@@ -31,7 +32,10 @@ var options = {
 
 const generatePdf = () => {
     html_to_pdf.generatePdf({ content: "<h1>Welcome to html-pdf-node</h1>" }, options).then(pdfBuffer => {
-        fs.writeFileSync('output.pdf', pdfBuffer).then(() => console.log('file created'))
+        console.log(pdfBuffer);
+        fs.writeFileSync('output.pdf', pdfBuffer)
+        const file = fs.readFileSync('output.pdf', 'utf8')
+        console.log('pdf created', file)
         // console.log("PDF Buffer:-", pdfBuffer.toString('utf-8'));
     });
 }
