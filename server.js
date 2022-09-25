@@ -1,15 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { Object, Email, ResponseObject } from './model.js';
+import { Object, Link, ResponseObject } from './model.js';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 import html_to_pdf from 'html-pdf-node'
-import path from 'path';
-
-
-const html = fs.readFileSync('./template.html', 'utf8');
 
 const analysis = [
     "More than 10% of searches online are misspelt. Your search tool should be able to correct spelling mistakes and typing errors, otherwise this may lead to users abandoning sessions on the account of not finding desired results.",
@@ -61,22 +57,22 @@ app.get('/', async (req, res) => {
     }
 })
 
-app.post('/email', async (req, res) => {
-    const userEmail = req.body.email
+app.post('/link', async (req, res) => {
+    const userLink = req.body.link
     try {
-        const email = await Email({ email: userEmail })
-        email.save()
-        res.status(201).send(email)
+        const link = await Link({ link: userLink })
+        link.save()
+        res.status(201).send(link)
     } catch (error) {
         res.json(error.message)
     }
 })
 
 app.post('/response', async (req, res) => {
-    const email = req.body.email
+    const link = req.body.link
     const response = req.body.response
     try {
-        const responseObject = await ResponseObject({ email, response })
+        const responseObject = await ResponseObject({ link, response })
         responseObject.save()
         res.status(201).send(responseObject)
     } catch (error) {
@@ -85,11 +81,11 @@ app.post('/response', async (req, res) => {
 })
 
 app.post('/', async (req, res) => {
+    const link = req.body.link
     const email = req.body.email
-    const details = req.body.details
     const response = req.body.response
     try {
-        const object = await Object({ email, details, response })
+        const object = await Object({ link, response, email })
         object.save()
         let result = 0
         response.map(res => {
@@ -107,27 +103,34 @@ app.post('/', async (req, res) => {
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title> Solocl Search Evaluation</title>
-            <script src="server.js"></script>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;600;700&display=swap" rel="stylesheet">
+            <style>
+                body{
+                    font-family: 'Montserrat', sans-serif;
+                }
+            </style>
         </head>
         
         <body>
             <h1 class="title" style="text-align:center; color:#5D3FD3;">Solocl Search Evaluation</h1>
             <h1 class="score" style="text-align:center;">${result}0%</h1>
             <ul style="list-style:none;">
-            
                 ${response.map((res, index) => {
                 return (`
                 <div class="box" style="
-                border: 3px solid black;
+                border: 2px solid #d3d3d3;
                 border-radius: 12px;
                 padding: 1rem;
                 width: fit-content;
+                margin-bottom: 2rem;
                 ">
                     <li class="question" style="margin:1rem 0;font-size: 18px;">Question: </li>
                     <li class="question" style="margin:1rem 0;font-size: 24px;">${res.question} </li>
                     <li class="answer" style="margin:1rem 0;">Your response: <span
-                        style="font-weight: bold; font-size: 24px; color:#5D3FD3;">${res.answer}</span></li>
-                    <li style="border: 3px solid black; background-color: #808080;margin:1rem 0;font-size: 18px;">
+                        style="font-weight: bold; font-size: 24px; color:#5D3FD3;">${res.answer.charAt(0).toUpperCase() + res.answer.slice(1)}</span></li>
+                    <li style="background-color: #d3d3d3;margin:1rem 0;font-size: 18px;padding: 1rem;border-radius: 12px;">
                     <span style="margin:1rem 0;font-size: 18px;">our analysis: </span>
                     ${analysis[index]}
                     </li>
@@ -139,14 +142,14 @@ app.post('/', async (req, res) => {
         </body >
         </html >
                     ` }, options).then(pdfBuffer => {
-                fs.writeFileSync('./search-eval-report.pdf', pdfBuffer)
+                fs.writeFileSync('./search-evaluation-report.pdf', pdfBuffer)
                 const msg = {
                     from: "sarthakrajesh777@gmail.com",
                     to: details.email,
                     subject: "Your Solocl Search Evaluation Report is here!",
                     attachments: [{
-                        filename: 'search-eval-report.pdf',
-                        path: './search-eval-report.pdf',
+                        filename: 'search-evaluation-report.pdf',
+                        path: './search-evaluation-report.pdf',
                         contentType: 'application/pdf'
                     }],
                     text: `Hello,\nThank you for taking the Solocl Search Evaluation, you can find your detailed Evaluation report attached below.\n\nYou can also sign-up for an exclusive FREE 30-minute call where we will go through 40+ additional evaluation parameters on your website/app.\nSign-up here: https://bit.ly/soloclsearcheval_mail\n\nLooking forward to interacting with you.\n\nPratik\nfrom Solocl\n`
