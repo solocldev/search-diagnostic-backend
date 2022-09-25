@@ -117,6 +117,7 @@ app.post('/', async (req, res) => {
         </head>
         
         <body>
+            <img src="https://i.postimg.cc/fyYGVX2m/Solocl.png" alt="solocl_img" style="display: block;margin: auto;">
             <h1 class="title" style="text-align:center; color:#5D3FD3;">Solocl Search Evaluation</h1>
             <h1 class="score" style="text-align:center;">${result}0%</h1>
             <ul style="list-style:none;">
@@ -134,7 +135,7 @@ app.post('/', async (req, res) => {
                     <li class="answer" style="margin:1rem 0;font-size: 18px; ">Your response: <span
                         style="font-weight: bold; font-size: 24px; color:#5D3FD3;">${res.answer.charAt(0).toUpperCase() + res.answer.slice(1)}</span></li>
                     <li style="background-color: #d3d3d3;margin:1rem 0;font-size: 24px;border-radius: 12px;">
-                    <span style="margin:1rem 0;font-size: 18px;">our analysis: </span>
+                    <span style="margin:1rem 0;font-size: 18px;">Our analysis: </span>
                     <br />
                     <span style="margin:1rem 0;">${analysis[index]}</span>
                     </li>
