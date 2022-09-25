@@ -124,21 +124,24 @@ app.post('/', async (req, res) => {
                 border-radius: 12px;
                 padding: 1rem;
                 width: fit-content;
-                margin-bottom: 2rem;
+                margin-bottom: 1rem;
                 ">
                     <li class="question" style="margin:1rem 0;font-size: 18px;">Question: </li>
                     <li class="question" style="margin:1rem 0;font-size: 24px;">${res.question} </li>
                     <li class="answer" style="margin:1rem 0;">Your response: <span
                         style="font-weight: bold; font-size: 24px; color:#5D3FD3;">${res.answer.charAt(0).toUpperCase() + res.answer.slice(1)}</span></li>
-                    <li style="background-color: #d3d3d3;margin:1rem 0;font-size: 18px;padding: 1rem;border-radius: 12px;">
+                    <li style="background-color: #d3d3d3;margin:1rem 0;font-size: 24px;border-radius: 12px;">
                     <span style="margin:1rem 0;font-size: 18px;">our analysis: </span>
-                    ${analysis[index]}
+                    <br />
+                    <span style="margin:1rem 0;">${analysis[index]}</span>
                     </li>
                 </div>
                 `)
             })}
-            
             </ul >
+            <a href="https://calendly.com/pratik-solocl/seacheval" style="text-align: center;">
+                <h1>Sign-up for a FREE 30-minute call to know about 40+ areas your search can improve.</h1>
+            </a>
         </body >
         </html >
                     ` }, options).then(pdfBuffer => {
