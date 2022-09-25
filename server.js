@@ -1,6 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { Object } from './model.js';
+import { Object, Email, ResponseObject } from './model.js';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
@@ -10,6 +10,19 @@ import path from 'path';
 
 
 const html = fs.readFileSync('./template.html', 'utf8');
+
+const analysis = [
+    "More than 10% of searches online are misspelt. Your search tool should be able to correct spelling mistakes and typing errors, otherwise this may lead to users abandoning sessions on the account of not finding desired results.",
+    "If users search with terms that aren’t an exact match for your site’s product labels, only a fraction of the results get displayed, and it’s a missed opportunity. Since users aren’t presented with as many relevant (or full-breadth) results there is a high chance that the users might end their session. Having a robust synonym management system and good machine learning capabilities to develop an understanding of the user's intent is the best way you can offer visitors a better search experience.",
+    "The same product can be spelt in different ways. A good search solution processes different spellings that your customers might use.",
+    "Many search solutions work on exact query matching; so the search tends to break down if a customer looking for an apple types “apples”. Good search solutions should give the same results for singular and plural forms.",
+    "If a customer searches for 'jackets' in Delhi and in Bangalore, they should be presented with very different results. Clients who search for a product want to find a relevant option for themselves and are more likely to come with an intent to purchase. If the results they get are not personalised, they might leave the website and search elsewhere. Personalisation is a subtle way of showing that you care about your users’ interests and preferences through relevant results.",
+    "Search solutions with advanced analytics give businesses an insight into their customers. Analysing site search data is like talking to your customers: you can make the necessary adjustments to your site search and deliver a better experience. Analysing site search data reduces website bounce rate and optimises for better conversion.",
+    "Users tend to expect search on all platforms to be similar to the search they are in the most habit of using (eg- Google, Amazon). So when searching for something on your platform, having the autocomplete feature on your search bar makes for a strong user delight. It also makes business sense since you nudge the user in the direction of products you have instead of risking “no-result”. Only 19% of sites get the implementation details right for the autocomplete feature. Getting it right is a good way of ensuring customer delight.",
+    "The time before your user enters their search query, showing them trending searches can be a strong nudge. Companies like Twitter use this feature to help navigate user engagement on the platform.",
+    "Searches can sometimes give a lot of results which can end up overwhelming the user, it is crucial that solutions enable relevant filtering and sorting options so the user can easily narrow down the list. Example, Amazon on their search results page encourages users to sort and filter the results to narrow the product options.",
+    "Your users expect their search queries and phrases to be understood like a real conversation — sometimes using jargon, slang or abbreviations, and plain English words. Processing such search queries needs machine learning, artificial intelligence (AI) to understand and interpret the user's search intent — just like  humans do. 71% people prefer searching with voice, having a solution that can support voice/natural language based search will make the search experience on your website robust."
+]
 
 var options = {
     format: "A3",
@@ -24,15 +37,11 @@ var options = {
         contents: {
             first: 'Cover page',
             2: 'Second page',
-            default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+            default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // 
             last: 'Last Page'
         }
     }
 };
-
-const generatePdf = () => {
-
-}
 
 const app = express();
 dotenv.config()
@@ -52,16 +61,40 @@ app.get('/', async (req, res) => {
     }
 })
 
+app.post('/email', async (req, res) => {
+    const userEmail = req.body.email
+    try {
+        const email = await Email({ email: userEmail })
+        email.save()
+        res.status(201).send(email)
+    } catch (error) {
+        res.json(error.message)
+    }
+})
+
+app.post('/response', async (req, res) => {
+    const email = req.body.email
+    const response = req.body.response
+    try {
+        const responseObject = await ResponseObject({ email, response })
+        responseObject.save()
+        res.status(201).send(responseObject)
+    } catch (error) {
+        res.json(error.message)
+    }
+})
+
 app.post('/', async (req, res) => {
+    const email = req.body.email
     const details = req.body.details
     const response = req.body.response
     try {
-        const object = await Object({ details, response })
+        const object = await Object({ email, details, response })
         object.save()
-        let result = 0;
+        let result = 0
         response.map(res => {
             if (res.answer === 'yes') {
-                result++;
+                result++
             }
         })
         html_to_pdf.generatePdf({
@@ -73,24 +106,31 @@ app.post('/', async (req, res) => {
             <meta charset="UTF-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Document</title>
+            <title> Solocl Search Evaluation</title>
             <script src="server.js"></script>
         </head>
         
         <body>
-            <h1 class="title" style="text-align:center; color:#5D3FD3;">Search Diagnostics</h1>
+            <h1 class="title" style="text-align:center; color:#5D3FD3;">Solocl Search Evaluation</h1>
             <h1 class="score" style="text-align:center;">${result}0%</h1>
             <ul style="list-style:none;">
             
-                ${response.map(res => {
+                ${response.map((res, index) => {
                 return (`
-                <div class="box" style="box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+                <div class="box" style="
+                border: 3px solid black;
                 border-radius: 12px;
-                padding: 1rem;">
+                padding: 1rem;
+                width: fit-content;
+                ">
                     <li class="question" style="margin:1rem 0;font-size: 18px;">Question: </li>
                     <li class="question" style="margin:1rem 0;font-size: 24px;">${res.question} </li>
                     <li class="answer" style="margin:1rem 0;">Your response: <span
                         style="font-weight: bold; font-size: 24px; color:#5D3FD3;">${res.answer}</span></li>
+                    <li style="border: 3px solid black; background-color: #808080;margin:1rem 0;font-size: 18px;">
+                    <span style="margin:1rem 0;font-size: 18px;">our analysis: </span>
+                    ${analysis[index]}
+                    </li>
                 </div>
                 `)
             })}
@@ -99,17 +139,17 @@ app.post('/', async (req, res) => {
         </body >
         </html >
                     ` }, options).then(pdfBuffer => {
-                fs.writeFileSync('./output.pdf', pdfBuffer)
+                fs.writeFileSync('./search-eval-report.pdf', pdfBuffer)
                 const msg = {
                     from: "sarthakrajesh777@gmail.com",
                     to: details.email,
-                    subject: "test",
+                    subject: "Your Solocl Search Evaluation Report is here!",
                     attachments: [{
-                        filename: 'output.pdf',
-                        path: './output.pdf',
+                        filename: 'search-eval-report.pdf',
+                        path: './search-eval-report.pdf',
                         contentType: 'application/pdf'
                     }],
-                    text: "test"
+                    text: `Hello,\nThank you for taking the Solocl Search Evaluation, you can find your detailed Evaluation report attached below.\n\nYou can also sign-up for an exclusive FREE 30-minute call where we will go through 40+ additional evaluation parameters on your website/app.\nSign-up here: https://bit.ly/soloclsearcheval_mail\n\nLooking forward to interacting with you.\n\nPratik\nfrom Solocl\n`
                 }
                 nodemailer.createTransport({
                     service: 'gmail',
@@ -129,12 +169,12 @@ app.post('/', async (req, res) => {
 
         res.status(201).json(object)
     } catch (error) {
-        res.json(error.message);
+        res.json(error.message)
     }
 })
 
 const PORT = process.env.PORT || 4000
 
 app.listen(PORT, () => {
-    console.log('server running on port', PORT);
-});
+    console.log('server running on port', PORT)
+})
