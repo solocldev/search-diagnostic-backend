@@ -4,14 +4,16 @@ const object = new mongoose.Schema(
     {
         email: { type: String, required: true },
         link: { type: String, required: true },
-        response: { type: Array, required: true }
+        response: { type: Array, required: true },
+        id: { type: String, required: true }
     },
     { timestamps: true }
 )
 
 const link = new mongoose.Schema(
     {
-        link: { type: String, required: true }
+        link: { type: String, required: true },
+        id: { type: String, required: true }
     },
     { timestamps: true }
 )
@@ -19,7 +21,8 @@ const link = new mongoose.Schema(
 const responseObject = new mongoose.Schema(
     {
         link: { type: String, required: true },
-        response: { type: Array, required: true }
+        response: { type: Array, required: true },
+        id: { type: String, required: true }
     }
 )
 

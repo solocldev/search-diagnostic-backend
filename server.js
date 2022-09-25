@@ -20,7 +20,7 @@ const analysis = [
     "Your users expect their search queries and phrases to be understood like a real conversation — sometimes using jargon, slang or abbreviations, and plain English words. Processing such search queries needs machine learning, artificial intelligence (AI) to understand and interpret the user's search intent — just like  humans do. 71% people prefer searching with voice, having a solution that can support voice/natural language based search will make the search experience on your website robust."
 ]
 
-var options = {
+let options = {
     format: "A3",
     orientation: "portrait",
     border: "10mm",
@@ -59,8 +59,9 @@ app.get('/', async (req, res) => {
 
 app.post('/link', async (req, res) => {
     const userLink = req.body.link
+    const id = req.body.id
     try {
-        const link = await Link({ link: userLink })
+        const link = await Link({ link: userLink, id })
         link.save()
         res.status(201).send(link)
     } catch (error) {
@@ -71,8 +72,9 @@ app.post('/link', async (req, res) => {
 app.post('/response', async (req, res) => {
     const link = req.body.link
     const response = req.body.response
+    const id = req.body.id
     try {
-        const responseObject = await ResponseObject({ link, response })
+        const responseObject = await ResponseObject({ link, response, id })
         responseObject.save()
         res.status(201).send(responseObject)
     } catch (error) {
@@ -84,8 +86,9 @@ app.post('/', async (req, res) => {
     const link = req.body.link
     const email = req.body.email
     const response = req.body.response
+    const id = req.body.id
     try {
-        const object = await Object({ link, response, email })
+        const object = await Object({ link, response, email, id })
         object.save()
         let result = 0
         response.map(res => {
@@ -147,7 +150,7 @@ app.post('/', async (req, res) => {
                     ` }, options).then(pdfBuffer => {
                 fs.writeFileSync('./search-evaluation-report.pdf', pdfBuffer)
                 const msg = {
-                    from: "sarthakrajesh777@gmail.com",
+                    from: "prajurkar23@gmail.com",
                     to: email,
                     subject: "Your Solocl Search Evaluation Report is here!",
                     attachments: [{
@@ -160,7 +163,7 @@ app.post('/', async (req, res) => {
                 nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
-                        user: 'sarthakrajesh777@gmail.com',
+                        user: 'prajurkar23@gmail.com',
                         pass: process.env.APPPASS
                     },
                     port: 465,
