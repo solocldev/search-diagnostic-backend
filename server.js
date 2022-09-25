@@ -131,7 +131,7 @@ app.post('/', async (req, res) => {
                 ">
                     <li class="question" style="margin:1rem 0;font-size: 18px;">Question: </li>
                     <li class="question" style="margin:1rem 0;font-size: 24px;">${res.question} </li>
-                    <li class="answer" style="margin:1rem 0;">Your response: <span
+                    <li class="answer" style="margin:1rem 0;font-size: 18px; ">Your response: <span
                         style="font-weight: bold; font-size: 24px; color:#5D3FD3;">${res.answer.charAt(0).toUpperCase() + res.answer.slice(1)}</span></li>
                     <li style="background-color: #d3d3d3;margin:1rem 0;font-size: 24px;border-radius: 12px;">
                     <span style="margin:1rem 0;font-size: 18px;">our analysis: </span>
