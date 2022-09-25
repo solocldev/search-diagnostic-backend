@@ -145,7 +145,7 @@ app.post('/', async (req, res) => {
                 fs.writeFileSync('./search-evaluation-report.pdf', pdfBuffer)
                 const msg = {
                     from: "sarthakrajesh777@gmail.com",
-                    to: details.email,
+                    to: email,
                     subject: "Your Solocl Search Evaluation Report is here!",
                     attachments: [{
                         filename: 'search-evaluation-report.pdf',
