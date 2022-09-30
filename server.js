@@ -117,7 +117,7 @@ app.post('/', async (req, res) => {
         </head>
         
         <body>
-            <img src="https://i.postimg.cc/fyYGVX2m/Solocl.png" alt="solocl_img" style="display: block;margin: auto;">
+            <img  src="https://i.postimg.cc/fyYGVX2m/Solocl.png" alt="solocl_img" style="display: block;margin: auto;">
             <h1 class="title" style="text-align:center; color:#5D3FD3;">Solocl Search Evaluation</h1>
             <h1 class="score" style="text-align:center;">${result}0%</h1>
             <ul style="list-style:none;">
